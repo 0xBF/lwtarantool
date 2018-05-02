@@ -1,0 +1,21 @@
+$(DLLIB): libtarantool.a libmsgpuck.a
+
+$(OBJS): $(HDRS) $(ruby_headers)
+
+$(srcdir)vendor/tarantool-c/Makefile:
+	cd $(srcdir)/vendor/tarantool-c && cmake .
+
+libtarantool.a: $(srcdir)/vendor/tarantool-c/Makefile
+	make -C $(srcdir)/vendor/tarantool-c tnt
+	cp $(srcdir)/vendor/tarantool-c/tnt/libtarantool.a .
+
+libmsgpuck.a: $(srcdir)/vendor/tarantool-c/Makefile
+	make -C $(srcdir)/vendor/tarantool-c msgpuck
+	cp $(srcdir)/vendor/tarantool-c/third_party/msgpuck/libmsgpuck.a .
+
+clean: clean-tarantool-c
+
+.PHONY: clean-tarantool-c
+clean-tarantool-c:
+	-make -sC $(srcdir)/vendor/tarantool-c clean
+	-rm -f $(srcdir)/vendor/tarantool-C/Makefile libtarantool.a libmsgpuck.a

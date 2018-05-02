@@ -1,0 +1,9 @@
+*.sw?
+*.a
+*.o
+*.so
+*.gem
+mkmf.log
+ext/lwtarantool/Makefile
+Gemfile.lock
+.bundle/
