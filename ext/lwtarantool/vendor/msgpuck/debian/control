@@ -1,0 +1,32 @@
+Source: msgpuck
+Priority: optional
+Section: libdevel
+Maintainer: Roman Tsisyk <roman@tarantool.org>
+Uploaders: Dmitry E. Oboukhov <unera@debian.org>
+Build-Depends: debhelper (>= 9), cdbs,
+               cmake (>= 2.8),
+               doxygen (>= 1.6)
+Standards-Version: 3.9.8
+Homepage: https://github.com/rtsisyk/msgpuck
+Vcs-Git: git://github.com/rtsisyk/msgpuck.git
+Vcs-Browser: https://github.com/rtsisyk/msgpuck
+
+Package: libmsgpuck-dev
+Architecture: any
+Depends: ${misc:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Description: Lightweight MessagePack library
+ MsgPuck is a compact and efficient MessagePack serialization library
+ designed with zero-cost abstractions in mind. Almost all encoding/decoding
+ functions can be fully inlined into your application by C/C++ compiler
+ to reach the maximum performance.
+ .
+ MessagePack is an efficient binary serialization format.
+ It lets you exchange data among multiple languages like JSON.
+ But it's faster and smaller. Small integers are encoded into a single byte,
+ and typical short strings require only one extra byte in addition to the
+ strings themselves.
+ .
+ This package provides a header file and a static library.
+ The static library contains fallback code for inline functions and
+ globals tables needed by library functions.
