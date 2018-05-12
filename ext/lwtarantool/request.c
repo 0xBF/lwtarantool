@@ -26,7 +26,7 @@ lwt_request_add_reply( VALUE self, struct tnt_reply *reply) {
 }
 
 static VALUE
-lwt_request_id( VALUE *self) {
+lwt_request_id( VALUE self) {
   lwt_request_t * req;
   Data_Get_Struct(self, lwt_request_t, req);
 
@@ -34,7 +34,7 @@ lwt_request_id( VALUE *self) {
 }
 
 static VALUE
-lwt_request_is_ready( VALUE *self) {
+lwt_request_is_ready( VALUE self) {
   lwt_request_t * req;
   Data_Get_Struct(self, lwt_request_t, req);
 
@@ -45,7 +45,7 @@ lwt_request_is_ready( VALUE *self) {
 }
 
 static VALUE
-lwt_request_code( VALUE *self) {
+lwt_request_code( VALUE self) {
   lwt_request_t * req;
   Data_Get_Struct(self, lwt_request_t, req);
 
@@ -56,7 +56,7 @@ lwt_request_code( VALUE *self) {
 }
 
 static VALUE
-lwt_request_error( VALUE *self) {
+lwt_request_error( VALUE self) {
   lwt_request_t * req;
   Data_Get_Struct(self, lwt_request_t, req);
 
@@ -75,7 +75,7 @@ lwt_request_error( VALUE *self) {
 }
 
 static VALUE
-lwt_request_result( VALUE *self) {
+lwt_request_result( VALUE self) {
   lwt_request_t * req;
   Data_Get_Struct(self, lwt_request_t, req);
 

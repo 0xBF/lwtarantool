@@ -1,21 +1,23 @@
-$(DLLIB): libtarantool.a libmsgpuck.a
+$(DLLIB): tarantool-c/libtarantool.a msgpuck/libmsgpuck.a
 
 $(OBJS): $(HDRS) $(ruby_headers)
 
-$(srcdir)vendor/tarantool-c/Makefile:
-	cd $(srcdir)/vendor/tarantool-c && cmake .
+msgpuck/libmsgpuck.a: Makefile
+	mkdir -p msgpuck
+	cd msgpuck && cmake ../$(srcdir)/vendor/msgpuck
+	make -C msgpuck msgpuck
 
-libtarantool.a: $(srcdir)/vendor/tarantool-c/Makefile
-	make -C $(srcdir)/vendor/tarantool-c tnt
-	cp $(srcdir)/vendor/tarantool-c/tnt/libtarantool.a .
+tarantool-c/libtarantool.a: Makefile
+	mkdir -p tarantool-c
+	cd tarantool-c && cmake ../$(srcdir)/vendor/tarantool-c -DMSGPUCK_INCLUDE_DIR=../$(srcdir)/vendor/msgpuck -DMSGPUCK_LIBRARY=../$(srcdir)/vendor/msgpuck
+	make -C tarantool-c tnt
 
-libmsgpuck.a: $(srcdir)/vendor/tarantool-c/Makefile
-	make -C $(srcdir)/vendor/tarantool-c msgpuck
-	cp $(srcdir)/vendor/tarantool-c/third_party/msgpuck/libmsgpuck.a .
+.PHONY: clean-msgpuck clean-tarantool-c
 
-clean: clean-tarantool-c
+clean: clean-msgpuck clean-tarantool-c
 
-.PHONY: clean-tarantool-c
+clean-msgpuck:
+	-rm -rf msgpuck
+
 clean-tarantool-c:
-	-make -sC $(srcdir)/vendor/tarantool-c clean
-	-rm -f $(srcdir)/vendor/tarantool-C/Makefile libtarantool.a libmsgpuck.a
+	-rm -rf tarantool-c

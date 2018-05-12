@@ -1,35 +1,11 @@
 require 'rake'
 require 'rake/extensiontask'
 
-task :compile => :prepare
-
-Rake::ExtensionTask.new('lwtarantool')
-
-task :prepare do
-  puts :qqqqq
+Rake::ExtensionTask.new do |ext|
+  ext.name = 'lwtarantool'
+  ext.ext_dir = 'ext/lwtarantool'
+  ext.lib_dir = 'lib/lwtarantool'
 end
-
-#namespace :gem do
-#  desc 'Build gem file'
-#  task :build do
-#    system '
-#      set -e
-#
-#      git submodule deinit --all -f
-#      git submodule init
-#      git submodule update
-#      git -C ext/lwtarantool/vendor/tarantool-c submodule init third_party/msgpuck
-#      git -C ext/lwtarantool/vendor/tarantool-c submodule update
-#
-#      gem build -q lwtarantool.gemspec
-#    '
-#  end
-#
-#  task :install => :build do
-#    system 'gem install --user-install lwtarantool-*.gem'
-#  end
-#end
-
 
 begin
   require 'rubocop/rake_task'

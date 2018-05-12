@@ -1,9 +1,8 @@
 require 'mkmf'
 
-unless find_header 'tarantool/tarantool.h', File.expand_path( '../vendor/tarantool-c/include', __FILE__)
-  exit 1
-end
-
+$INCFLAGS << ' -I$(srcdir)/vendor/tarantool-c/include'
+$LIBPATH << 'msgpuck/'
+$LIBPATH << 'tarantool-c/tnt/'
 $LOCAL_LIBS = '-ltarantool -lmsgpuck'
 
 create_makefile 'lwtarantool/lwtarantool'

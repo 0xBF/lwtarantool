@@ -7,3 +7,5 @@ mkmf.log
 ext/lwtarantool/Makefile
 Gemfile.lock
 .bundle/
+vendor/bundle
+tmp/

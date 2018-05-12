@@ -30,3 +30,4 @@ void lwt_request_add_reply( VALUE self, struct tnt_reply *reply);
 
 void init_conn();
 void init_request();
+void init_errors();
