@@ -56,7 +56,7 @@ lwt_conn_dealloc(lwt_conn_t *conn) {
 static VALUE
 lwt_conn_alloc( VALUE klass) {
   lwt_conn_t * conn;
-  conn = ALLOC(lwt_conn_t);
+  conn = ZALLOC(lwt_conn_t);
 
   conn->tnt = tnt_net(NULL);
   conn->requests = st_init_numtable();

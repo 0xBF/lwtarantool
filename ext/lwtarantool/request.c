@@ -8,11 +8,13 @@ lwt_request_create( VALUE conn, uint64_t id) {
   VALUE self;
   lwt_request_t * req;
 
-  req = ALLOC(lwt_request_t);
+  req = ZALLOC(lwt_request_t);
   req->id = id;
 
   self = Data_Wrap_Struct( rClass, NULL, NULL, req);
   rb_iv_set(self, "@conn", conn);
+
+  //printf("Create request %p, reply: %p\n", req, req->reply);
 
   return self;
 }
@@ -21,6 +23,8 @@ void
 lwt_request_add_reply( VALUE self, struct tnt_reply *reply) {
   lwt_request_t * req;
   Data_Get_Struct(self, lwt_request_t, req);
+
+  //printf("Add reply %p to request %p\n", reply, req);
 
   req->reply = reply;
 }
