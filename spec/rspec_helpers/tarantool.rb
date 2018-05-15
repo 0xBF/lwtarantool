@@ -36,8 +36,11 @@ module RSpecHelpers
           TCPSocket.new '127.0.0.1', 3301
           break
         rescue
+          sleep 0.05
+          retry if i > 0
+
+          STDERR.puts tarantool_log
           raise RuntimeError, "Tarantool failed..." if i == 0
-          sleep 0.01
         end
       end
     rescue

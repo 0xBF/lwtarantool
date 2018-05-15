@@ -133,9 +133,9 @@ describe 'LWTarantool::Connection' do
       expect{ conn.read }.to raise_exception(LWTarantool::SystemError)
     end
 
-    it 'mark all requests as failed if connection failed' do
-      req1 = conn.call('test1', [])
-      req2 = conn.call('test1', [])
+    it 'mark all unfinished requests as failed if connection failed' do
+      req1 = conn.call('fiber.sleep', [60])
+      req2 = conn.call('fiber.sleep', [60])
       stop_tarantool
       conn.read rescue nil
       expect(req1.ready?).to be true
