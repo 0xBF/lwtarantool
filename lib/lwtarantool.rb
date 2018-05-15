@@ -1,5 +1,3 @@
-#
-
 require 'lwtarantool/lwtarantool'
 require 'lwtarantool/connection'
 require 'lwtarantool/request'

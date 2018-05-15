@@ -1,0 +1,12 @@
+AllCops:
+  Exclude:
+  - 'ext/lwtarantool/extconf.rb'
+  - 'ext/lwtarantool/vendor/**/*'
+  - 'vendor/**/*'
+  - 'tmp/**/*'
+Metrics/LineLength:
+  Max: 120
+Style/SymbolArray:
+  Enabled: false
+Style/Documentation:
+  Enabled: false

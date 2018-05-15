@@ -1,5 +1,3 @@
-#
-
 require_relative 'spec_helper'
 
 describe 'LWTarantool::Request' do
@@ -37,7 +35,7 @@ describe 'LWTarantool::Request' do
     it 'update request status' do
       req = conn.call('test1', [])
       req.wait
-      expect(req.result).to eq [[1,2,3]]
+      expect(req.result).to eq [[1, 2, 3]]
     end
   end
 
@@ -51,7 +49,7 @@ describe 'LWTarantool::Request' do
     it 'returns data when request ready' do
       req = conn.call('test1', [])
       req.wait
-      expect(req.result).to eq [[1,2,3]]
+      expect(req.result).to eq [[1, 2, 3]]
     end
 
     it 'returns nil when request failed' do
@@ -81,7 +79,7 @@ describe 'LWTarantool::Request' do
       stop_tarantool
       req = conn.call('test1', []) rescue nil
       req.wait rescue nil
-      expect(req.error).to match /canceled/
+      expect(req.error).to match(/canceled/)
     end
   end
 end

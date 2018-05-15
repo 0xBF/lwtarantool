@@ -1,8 +1,8 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
 group :test do
   gem 'rspec', '~> 3.4'
-#  gem 'codecov', require: false
+  # gem 'codecov', require: false
 end
 
 group :development do

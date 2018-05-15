@@ -2,6 +2,11 @@
 #include <tarantool/tnt_reply.h>
 #include <tarantool/tnt_stream.h>
 
+#ifndef ZALLOC
+#  define ZALLOC_N(type,n) ((type*)xcalloc((n),sizeof(type)))
+#  define ZALLOC(type) (ZALLOC_N(type,1))
+#endif
+
 extern VALUE lwt_Class;
 
 extern VALUE lwt_eError;

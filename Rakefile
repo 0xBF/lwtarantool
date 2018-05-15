@@ -1,5 +1,6 @@
 require 'rake'
 require 'rake/extensiontask'
+require 'rspec/core/rake_task'
 
 Rake::ExtensionTask.new do |ext|
   ext.name = 'lwtarantool'
@@ -7,10 +8,12 @@ Rake::ExtensionTask.new do |ext|
   ext.lib_dir = 'lib/lwtarantool'
 end
 
+RSpec::Core::RakeTask.new(:spec)
+
 begin
   require 'rubocop/rake_task'
   RuboCop::RakeTask.new
-  task default: %i[spec rubocop]
+  task default: [:spec, :rubocop]
 rescue LoadError
   warn 'RuboCop is not available'
   task default: :spec

@@ -34,9 +34,6 @@ module LWTarantool
 
     private
 
-    def raise_exception
-    end
-
     attr_reader :mutex
   end
 end
