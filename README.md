@@ -1,6 +1,7 @@
 # LWTarantool - Ruby client for Tarantool 1.7+
 
 [![Build Status](https://semaphoreci.com/api/v1/0xbf/lwtarantool/branches/master/shields_badge.svg)](https://semaphoreci.com/0xbf/lwtarantool)
+[![Gem Version](https://badge.fury.io/rb/lwtarantool.svg)](https://badge.fury.io/rb/lwtarantool)
 
 ## About
 
