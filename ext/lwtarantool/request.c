@@ -29,6 +29,13 @@ lwt_request_add_reply( VALUE self, struct tnt_reply *reply) {
   req->reply = reply;
 }
 
+/*
+ * Document-class: LWTarantool::Request
+ *
+ * Request id
+ *
+ * @return [Integer] id
+ */
 static VALUE
 lwt_request_id( VALUE self) {
   lwt_request_t * req;
@@ -37,6 +44,11 @@ lwt_request_id( VALUE self) {
   return rb_uint2inum(req->id);
 }
 
+/*
+ * Document-class: LWTarantool::Request
+ *
+ * Check if request already processed.
+ */
 static VALUE
 lwt_request_is_ready( VALUE self) {
   lwt_request_t * req;
@@ -48,6 +60,7 @@ lwt_request_is_ready( VALUE self) {
     return Qtrue;
 }
 
+/*
 static VALUE
 lwt_request_code( VALUE self) {
   lwt_request_t * req;
@@ -58,6 +71,7 @@ lwt_request_code( VALUE self) {
 
   return rb_uint2inum(req->reply->code);
 }
+*/
 
 static VALUE
 lwt_request_error( VALUE self) {
@@ -95,10 +109,16 @@ lwt_request_result( VALUE self) {
 }
 
 void init_request() {
+  /*
+   * Document-class: LWTarantool::Request
+   *
+   * Class for work with Tarantool requests
+   */
   rClass = rb_define_class_under( lwt_Class, "Request", rb_cObject);
+
   rb_define_method(rClass, "id", lwt_request_id, 0);
   rb_define_method(rClass, "ready?", lwt_request_is_ready, 0);
-  rb_define_method(rClass, "code", lwt_request_code, 0);
+  //rb_define_method(rClass, "code", lwt_request_code, 0);
   rb_define_private_method(rClass, "_error", lwt_request_error, 0);
   rb_define_private_method(rClass, "_result", lwt_request_result, 0);
 }

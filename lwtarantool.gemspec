@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.authors     = ['Alexander Golovko']
   s.email       = 'ag@wallarm.com'
   s.files       = Dir['ext/**/*'].grep(/depend|\.(rb|c|h|cmake|txt)$/) +
-                  Dir['lib/**/*.rb']
+                  Dir['lib/**/*.rb'] + ['README.md']
   s.extensions  = ['ext/lwtarantool/extconf.rb']
   s.homepage    = 'http://rubygems.org/gems/lwtarantool'
   s.license     = 'MIT'

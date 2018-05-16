@@ -112,6 +112,25 @@ lwt_conn_disconnect(VALUE self) {
   return Qtrue;
 }
 
+/**
+ * Document-class: LWTarantool::Connection
+ *
+ * Create new connection to Tarantool.
+ *
+ * @param [Hash] args the options to establish connection
+ * @option args [String] :url The tarantool address
+ *
+ * @example
+ *   LWTarantool::Connection.new(url: 'tcp://127.0.0.1:3301')
+ *
+ * @return [LWTarantool::Connection] a new connection instance.
+ *
+ * @raise [LWTarantool::ResolvError] destination host can't be resolved
+ * @raise [LWTarantool::TimeoutError] connect timeout reached
+ * @raise [LWTarantool::LoginError] incorrect login or password
+ * @raise [LWTarantool::SystemError] connection failed
+ * @raise [LWTarantool::UnknownError] unknown error
+ */
 static VALUE
 lwt_conn_initialize(VALUE self, VALUE args) {
   lwt_conn_t * conn;
@@ -216,6 +235,16 @@ lwt_conn_read(VALUE self) {
   return req;
 }
 
+/**
+ * Document-class: LWTarantool::Connection
+ *
+ * Check if connection established.
+ *
+ * @example
+ *   conn.connected?
+ *
+ * @return [Boolean]
+ */
 static VALUE
 lwt_conn_is_connected(VALUE self) {
   lwt_conn_t * conn;
@@ -254,6 +283,11 @@ lwt_conn_strerror(VALUE self) {
 }
 
 void init_conn() {
+  /*
+   * Document-class: LWTarantool::Connection
+   *
+   * Class for work with Tarantool connections
+   */
   VALUE cClass = rb_define_class_under( lwt_Class, "Connection", rb_cObject);
 
   rb_const_set( lwt_Class, rb_intern("TNT_EFAIL"), rb_uint2inum(TNT_EFAIL));
@@ -267,7 +301,7 @@ void init_conn() {
   rb_const_set( lwt_Class, rb_intern("TNT_ELOGIN"), rb_uint2inum(TNT_ELOGIN));
 
   rb_define_alloc_func(cClass, lwt_conn_alloc);
-  rb_define_private_method(cClass, "initialize", lwt_conn_initialize, 1);
+  rb_define_method(cClass, "initialize", lwt_conn_initialize, 1);
   rb_define_private_method(cClass, "_connect", lwt_conn_connect, 0);
   rb_define_private_method(cClass, "_disconnect", lwt_conn_disconnect, 0);
   rb_define_private_method(cClass, "_error", lwt_conn_error, 0);

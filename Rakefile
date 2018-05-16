@@ -18,3 +18,13 @@ rescue LoadError
   warn 'RuboCop is not available'
   task default: :spec
 end
+
+begin
+  require 'yard'
+  YARD::Rake::YardocTask.new do |t|
+    t.files = %w[lib/**/*.rb ext/lwtarantool/*.c]
+    t.options = %w[--markup markdown]
+  end
+rescue LoadError
+  warn 'Yard is not available'
+end

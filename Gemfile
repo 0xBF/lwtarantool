@@ -7,6 +7,7 @@ end
 
 group :development do
   gem 'rubocop', require: false
+  gem 'yard', require: false
 end
 
 gem 'rake'
