@@ -82,8 +82,10 @@ lwt_conn_raise_error(lwt_conn_t *conn) {
     case TNT_ESYSTEM:
       rb_raise(lwt_eSystemError, tnt_strerror(conn->tnt));
       break;
-    case TNT_EFAIL:
     case TNT_EBIG:
+      rb_raise(lwt_eTooLargeRequestError, tnt_strerror(conn->tnt));
+      break;
+    case TNT_EFAIL:
     default:
       rb_raise(lwt_eUnknownError, tnt_strerror(conn->tnt));
       break;
@@ -119,6 +121,8 @@ lwt_conn_disconnect(VALUE self) {
  *
  * @param [Hash] args the options to establish connection
  * @option args [String] :url The tarantool address
+ * @option args [Integer] :recv_buf_size Receive buffer size (unknown effect)
+ * @option args [Integer] :send_buf_size Send buffer size (maximum request size)
  *
  * @example
  *   LWTarantool::Connection.new(url: 'tcp://127.0.0.1:3301')
@@ -144,6 +148,27 @@ lwt_conn_initialize(VALUE self, VALUE args) {
   if (TYPE(args) != T_HASH)
     rb_raise(rb_eArgError, "args must be a Hash");
 
+  // handle recv_buf_size option
+  val = rb_hash_aref(args, ID2SYM(rb_intern( "recv_buf_size")));
+  if (TYPE(val) != T_NIL) {
+    if (TYPE(val) != T_FIXNUM)
+      rb_raise(rb_eArgError, "recv_buf_size must be an Integer");
+
+    if (tnt_set(conn->tnt, TNT_OPT_RECV_BUF, rb_fix2uint(val)) != 0)
+      rb_raise(rb_eArgError, "invalid recv_buf_size value");
+  }
+
+  // handle send_buf_size option
+  val = rb_hash_aref(args, ID2SYM(rb_intern( "send_buf_size")));
+  if (TYPE(val) != T_NIL) {
+    if (TYPE(val) != T_FIXNUM)
+      rb_raise(rb_eArgError, "send_buf_size must be an Integer");
+
+    if (tnt_set(conn->tnt, TNT_OPT_SEND_BUF, rb_fix2uint(val)) != 0)
+      rb_raise(rb_eArgError, "invalid send_buf_size value");
+  }
+
+  // handle url option
   val = rb_hash_aref(args, ID2SYM(rb_intern( "url")));
   if (TYPE(val) != T_STRING)
     rb_raise(rb_eArgError, "url must be a String");
@@ -153,7 +178,8 @@ lwt_conn_initialize(VALUE self, VALUE args) {
   url[url_len] = '\0';
   strncpy(url, RSTRING_PTR(val), url_len);
 
-  tnt_set(conn->tnt, TNT_OPT_URI, url);
+  if (tnt_set(conn->tnt, TNT_OPT_URI, url) != 0)
+    rb_raise(rb_eArgError, "invalid url value");
 
   lwt_conn_connect(self);
 
