@@ -23,6 +23,7 @@ module LWTarantool
     # @raise [LWTarantool::TimeoutError] connect timeout reached.
     # @raise [LWTarantool::LoginError] incorrect login or password.
     # @raise [LWTarantool::SystemError] connection failed.
+    # @raise [LWTarantool::TooLargeRequestError] request is larger than connection send buffer.
     # @raise [LWTarantool::UnknownError] unknown error.
     #
     def call(func, args)

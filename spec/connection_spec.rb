@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 
 describe 'LWTarantool::Connection' do
@@ -97,6 +99,12 @@ describe 'LWTarantool::Connection' do
       expect(req2.ready?).to eq true
       expect(req1.error).to match(/canceled/)
       expect(req2.error).to match(/canceled/)
+    end
+
+    it 'raise TooLargeRequestError if request > send buffer' do
+      conn = LWTarantool.new(url: '127.0.0.1:3301', send_buf_size: 20_021)
+      expect { conn.call('test', ['x' * 19_999]) }.not_to raise_error
+      expect { conn.call('test', ['x' * 20_000]) }.to raise_error(LWTarantool::TooLargeRequestError)
     end
   end
 

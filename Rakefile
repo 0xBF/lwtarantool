@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rake'
 require 'rake/extensiontask'
 require 'rspec/core/rake_task'

@@ -15,6 +15,7 @@ extern VALUE lwt_eResolvError;
 extern VALUE lwt_eSyncError;
 extern VALUE lwt_eSystemError;
 extern VALUE lwt_eTimeoutError;
+extern VALUE lwt_eTooLargeRequestError;
 extern VALUE lwt_eUnknownError;
 
 
