@@ -2,8 +2,8 @@
 
 Gem::Specification.new do |s|
   s.name        = 'lwtarantool'
-  s.version     = '0.0.2'
-  s.date        = '2018-05-03'
+  s.version     = '0.0.3'
+  s.date        = '2019-05-20'
   s.summary     = 'Lightweight Tarantool client'
   s.description = 'Tarantool client library'
   s.authors     = ['Alexander Golovko']
