@@ -43,8 +43,39 @@ describe 'LWTarantool::Connection' do
       expect { LWTarantool.new(url: '127.0.0.1:3302') }.to raise_error(LWTarantool::SystemError, /Connection refused/)
     end
 
-    it 'use connect timeout'
-    it 'raise when connect timeout'
+    context 'timeout' do
+      # FIXME: 8.8.8.8 is well-known IP address with blackholed ports, but there are no any garantees
+
+      it 'raise when connect timeout' do
+        expect { LWTarantool.new(url: '8.8.8.8:3301', connect_timeout: 0.01) }.to raise_error(LWTarantool::TimeoutError, /operation timeout/)
+      end
+
+      it 'use connect_timeout' do
+        [0.2, 0.5].each do |timeout|
+          time = Time.now
+
+          begin
+            LWTarantool.new(url: '8.8.8.8:3301', connect_timeout: timeout)
+          rescue LWTarantool::TimeoutError
+          end
+
+          expect(Time.now - time).to be_within(0.1).of(timeout)
+        end
+      end
+
+      it 'use open_timeout' do
+        [0.2, 0.5].each do |timeout|
+          time = Time.now
+
+          begin
+            LWTarantool.new(url: '8.8.8.8:3301', open_timeout: timeout)
+          rescue LWTarantool::TimeoutError
+          end
+
+          expect(Time.now - time).to be_within(0.1).of(timeout)
+        end
+      end
+    end
 
     it 'create mutex' do
       conn = LWTarantool.new(url: '127.0.0.1:3301')

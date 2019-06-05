@@ -3,6 +3,18 @@
 
 static VALUE rClass;
 
+static void
+lwt_request_dealloc(lwt_request_t *req) {
+  if (req == NULL)
+    return;
+
+  if (req->reply == NULL)
+    return;
+
+  tnt_reply_free(req->reply);
+}
+
+
 VALUE
 lwt_request_create( VALUE conn, uint64_t id) {
   VALUE self;
@@ -11,7 +23,7 @@ lwt_request_create( VALUE conn, uint64_t id) {
   req = ZALLOC(lwt_request_t);
   req->id = id;
 
-  self = Data_Wrap_Struct( rClass, NULL, NULL, req);
+  self = Data_Wrap_Struct( rClass, NULL, lwt_request_dealloc, req);
   rb_iv_set(self, "@conn", conn);
 
   //printf("Create request %p, reply: %p\n", req, req->reply);
