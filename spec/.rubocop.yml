@@ -1,3 +1,5 @@
+Lint/HandleExceptions:
+  Enabled: false
 Metrics/BlockLength:
   Enabled: false
 Metrics/LineLength:

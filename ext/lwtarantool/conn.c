@@ -114,6 +114,48 @@ lwt_conn_disconnect(VALUE self) {
   return Qtrue;
 }
 
+void
+_lwt_conn_set_num_option(VALUE args, const char *option, lwt_conn_t *conn, enum tnt_opt_type tnt_opt) {
+  VALUE val;
+
+  val = rb_hash_aref(args, ID2SYM(rb_intern(option)));
+
+  if (TYPE(val) == T_NIL)
+    return;
+
+  if (TYPE(val) != T_FIXNUM)
+    rb_raise(rb_eArgError, "%s must be an Integer", option);
+
+  if (tnt_set(conn->tnt, tnt_opt, rb_fix2uint(val)) != 0)
+    rb_raise(rb_eArgError, "invalid %s value", option);
+}
+
+void
+_lwt_conn_set_timeval_option(VALUE args, const char *option, lwt_conn_t *conn, enum tnt_opt_type tnt_opt) {
+  VALUE val;
+  double timeout_sec, timeout_usec;
+  struct timeval tnt_opt_val;
+
+  val = rb_hash_aref(args, ID2SYM(rb_intern(option)));
+
+  if (TYPE(val) == T_NIL)
+    return;
+
+  if (TYPE(val) != T_FIXNUM && TYPE(val) != T_FLOAT)
+    rb_raise(rb_eArgError, "%s must be an Integer", option);
+
+  timeout_usec = modf(rb_num2dbl(val), &timeout_sec);
+
+  if (timeout_sec < 0)
+    rb_raise(rb_eArgError, "%s < 0", option);
+
+  tnt_opt_val.tv_sec = (unsigned long) timeout_sec;
+  tnt_opt_val.tv_usec = (unsigned long) (timeout_usec * 1000000);
+
+  if (tnt_set(conn->tnt, tnt_opt, &tnt_opt_val) != 0)
+    rb_raise(rb_eArgError, "invalid %s value", option);
+}
+
 /**
  * Document-class: LWTarantool::Connection
  *
@@ -123,6 +165,8 @@ lwt_conn_disconnect(VALUE self) {
  * @option args [String] :url The tarantool address
  * @option args [Integer] :recv_buf_size Receive buffer size (unknown effect)
  * @option args [Integer] :send_buf_size Send buffer size (maximum request size)
+ * @option args [Integer] :connect_timeout Timeout for establish tcp connection to Tarantool
+ * @option args [Integer] :open_timeout The same as connect_timeout
  *
  * @example
  *   LWTarantool::Connection.new(url: 'tcp://127.0.0.1:3301')
@@ -148,25 +192,14 @@ lwt_conn_initialize(VALUE self, VALUE args) {
   if (TYPE(args) != T_HASH)
     rb_raise(rb_eArgError, "args must be a Hash");
 
-  // handle recv_buf_size option
-  val = rb_hash_aref(args, ID2SYM(rb_intern( "recv_buf_size")));
-  if (TYPE(val) != T_NIL) {
-    if (TYPE(val) != T_FIXNUM)
-      rb_raise(rb_eArgError, "recv_buf_size must be an Integer");
+  _lwt_conn_set_num_option(args, "recv_buf_size", conn, TNT_OPT_RECV_BUF);
+  _lwt_conn_set_num_option(args, "send_buf_size", conn, TNT_OPT_SEND_BUF);
+  _lwt_conn_set_timeval_option(args, "connect_timeout", conn, TNT_OPT_TMOUT_CONNECT);
+  _lwt_conn_set_timeval_option(args, "open_timeout", conn, TNT_OPT_TMOUT_CONNECT);
 
-    if (tnt_set(conn->tnt, TNT_OPT_RECV_BUF, rb_fix2uint(val)) != 0)
-      rb_raise(rb_eArgError, "invalid recv_buf_size value");
-  }
-
-  // handle send_buf_size option
-  val = rb_hash_aref(args, ID2SYM(rb_intern( "send_buf_size")));
-  if (TYPE(val) != T_NIL) {
-    if (TYPE(val) != T_FIXNUM)
-      rb_raise(rb_eArgError, "send_buf_size must be an Integer");
-
-    if (tnt_set(conn->tnt, TNT_OPT_SEND_BUF, rb_fix2uint(val)) != 0)
-      rb_raise(rb_eArgError, "invalid send_buf_size value");
-  }
+  // TODO: How should we process a partial read/write before timeout?
+  //_lwt_conn_set_timeval_option(args, "receive_timeout", conn, TNT_OPT_TMOUT_RECV);
+  //_lwt_conn_set_timeval_option(args, "send_timeout", conn, TNT_OPT_TMOUT_SEND);
 
   // handle url option
   val = rb_hash_aref(args, ID2SYM(rb_intern( "url")));
