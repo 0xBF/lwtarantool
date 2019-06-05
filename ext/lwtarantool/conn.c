@@ -68,26 +68,26 @@ static void
 lwt_conn_raise_error(lwt_conn_t *conn) {
   switch(tnt_error(conn->tnt)) {
     case TNT_EMEMORY:
-      rb_raise(rb_eNoMemError, tnt_strerror(conn->tnt));
+      rb_raise(rb_eNoMemError, "%s", tnt_strerror(conn->tnt));
       break;
     case TNT_ERESOLVE:
-      rb_raise(lwt_eResolvError, tnt_strerror(conn->tnt));
+      rb_raise(lwt_eResolvError, "%s", tnt_strerror(conn->tnt));
       break;
     case TNT_ETMOUT:
-      rb_raise(lwt_eTimeoutError, tnt_strerror(conn->tnt));
+      rb_raise(lwt_eTimeoutError, "%s", tnt_strerror(conn->tnt));
       break;
     case TNT_ELOGIN:
-      rb_raise(lwt_eLoginError, tnt_strerror(conn->tnt));
+      rb_raise(lwt_eLoginError, "%s", tnt_strerror(conn->tnt));
       break;
     case TNT_ESYSTEM:
-      rb_raise(lwt_eSystemError, tnt_strerror(conn->tnt));
+      rb_raise(lwt_eSystemError, "%s", tnt_strerror(conn->tnt));
       break;
     case TNT_EBIG:
-      rb_raise(lwt_eTooLargeRequestError, tnt_strerror(conn->tnt));
+      rb_raise(lwt_eTooLargeRequestError, "%s", tnt_strerror(conn->tnt));
       break;
     case TNT_EFAIL:
     default:
-      rb_raise(lwt_eUnknownError, tnt_strerror(conn->tnt));
+      rb_raise(lwt_eUnknownError, "%s", tnt_strerror(conn->tnt));
       break;
   }
 }
