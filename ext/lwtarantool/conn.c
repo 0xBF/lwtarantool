@@ -244,17 +244,26 @@ lwt_conn_read(VALUE self) {
   int rc = conn->tnt->read_reply(conn->tnt, reply);
   //printf("sync: %d, code: %d, err: %d, errno: %d, strerr: %s\n", rc, reply->sync, reply->code, tnt_error(conn->tnt), tnt_errno(conn->tnt), tnt_strerror(conn->tnt));
 
-  if (rc == 1)
+  if (rc == 1) {
+    tnt_reply_free(reply);
     return Qnil;
+  }
 
-  if (rc == -1)
+  if (rc == -1) {
+    tnt_reply_free(reply);
     lwt_conn_raise_error(conn);
+  }
 
-  if (rc != 0)
+  if (rc != 0) {
+    tnt_reply_free(reply);
     rb_raise( lwt_eUnknownError, "read_reply() return code %d", rc);
+  }
 
-  if (st_delete(conn->requests, &reply->sync, &req) != 1)
-    rb_raise(lwt_eSyncError, "Bad sync id %lu in tarantool reply", reply->sync);
+  if (st_delete(conn->requests, &reply->sync, &req) != 1) {
+    int sync = reply->sync;
+    tnt_reply_free(reply);
+    rb_raise(lwt_eSyncError, "Bad sync id %lu in tarantool reply", sync);
+  }
 
   lwt_request_add_reply( req, reply);
 
