@@ -35,6 +35,10 @@ describe 'LWTarantool::Connection' do
       expect { LWTarantool.new(url: '127.0.0.1:3301') }.not_to raise_error
     end
 
+    it 'has url attribute' do
+      expect(conn.url).to eq('127.0.0.1:3301')
+    end
+
     it 'raise when tarantool host not resolved' do
       expect { LWTarantool.new(url: 'aaaa.aa') }.to raise_error(LWTarantool::ResolvError)
     end

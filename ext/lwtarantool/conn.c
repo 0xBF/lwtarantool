@@ -214,6 +214,8 @@ lwt_conn_initialize(VALUE self, VALUE args) {
   if (tnt_set(conn->tnt, TNT_OPT_URI, url) != 0)
     rb_raise(rb_eArgError, "invalid url value");
 
+  rb_iv_set(self, "@url", val);
+
   lwt_conn_connect(self);
 
   return Qnil;
@@ -368,6 +370,7 @@ void init_conn() {
   rb_const_set( lwt_Class, rb_intern("TNT_EBADVAL"), rb_uint2inum(TNT_EBADVAL));
   rb_const_set( lwt_Class, rb_intern("TNT_ELOGIN"), rb_uint2inum(TNT_ELOGIN));
 
+  rb_define_attr(cClass, "url", 1, 0);
   rb_define_alloc_func(cClass, lwt_conn_alloc);
   rb_define_method(cClass, "initialize", lwt_conn_initialize, 1);
   rb_define_private_method(cClass, "_connect", lwt_conn_connect, 0);
